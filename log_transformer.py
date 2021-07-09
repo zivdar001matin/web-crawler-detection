@@ -43,8 +43,6 @@ class LogTransformer(TransformerMixin):
             df[name] *= weight
             df[name] = df[name].astype(pd.SparseDtype(np.uint8))
 
-        df = df.drop('method', axis=1)
-
         return df
     
     def binning_requested_file_type(self, df):
@@ -65,8 +63,6 @@ class LogTransformer(TransformerMixin):
             df[name] *= weight
             df[name] = df[name].astype(pd.SparseDtype(np.uint8))
 
-        df = df.drop('requested_file_type', axis=1)
-
         return df
 
     def binning_status_code(self, df):
@@ -81,8 +77,6 @@ class LogTransformer(TransformerMixin):
             df[name] = df[name].sparse.to_dense()
             df[name] *= weight
             df[name] = df[name].astype(pd.SparseDtype(np.uint8))
-
-        df = df.drop('status_code', axis=1)
 
         return df
     
@@ -106,15 +100,11 @@ class LogTransformer(TransformerMixin):
             df[name] *= weight
             df[name] = df[name].astype(pd.SparseDtype(np.uint8))
 
-        df = df.drop('response_length', axis=1)
-
         return df
     
     def extracting_url_depth(self, df):
         print('extracting_url_depth')
         df['url_depth'] = df['url'].apply(lambda x: len(re.findall(r'/', x[1:])))
-
-        df = df.drop('url', axis=1)
 
         return df
     
@@ -187,6 +177,6 @@ class LogTransformer(TransformerMixin):
 
     def drop_rest(self, df):
         print('drop_rest')
-        df = df.drop(['ip', 'user_agent', 'response_time', 'timestamp'], axis=1)
+        df = df.drop(['ip', 'user_agent', 'response_time', 'method', 'requested_file_type', 'status_code', 'response_length', 'url', 'user_agent', 'timestamp'], axis=1)
 
         return df
