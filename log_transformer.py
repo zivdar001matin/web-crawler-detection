@@ -14,8 +14,14 @@ class LogTransformer(TransformerMixin):
         self.df_ix['Time'] = self.df_ix['Time'].apply(lambda x: x+12)
         self.df_ix['norm_packets'] = MinMaxScaler().fit_transform(self.df_ix['Packets'].values.reshape(-1,1))
         self.df_ix['Time'] = self.df_ix['Time'].values.astype(np.float16)
-    
+
     def fit(self, X, y=None):
+        X_ = X.copy()
+        X_['response_length'] = X_['response_length'].apply(lambda x: re.search(r'\d*', x)[0])
+        X_.loc[X_['response_length'] == '', 'response_length'] = '0'
+        X_['response_length'] = X_['response_length'].values.astype(np.int32)
+        self.bins = np.geomspace(1, X_['response_length'].max(), endpoint=True, num=4)
+
         return self
     
     def transform(self, X, y=None):
@@ -85,9 +91,7 @@ class LogTransformer(TransformerMixin):
         df['response_length'] = df['response_length'].apply(lambda x: re.search(r'\d*', x)[0])
         df.loc[df['response_length'] == '', 'response_length'] = '0'
         df['response_length'] = df['response_length'].values.astype(np.int32)
-
-        bins = np.geomspace(1, df['response_length'].max(), endpoint=True, num=4)
-        df['response_length'] = pd.cut(df['response_length'], bins=bins, labels=['small', 'medium', 'big'], include_lowest=True)
+        df['response_length'] = pd.cut(df['response_length'], bins=self.bins, labels=['small', 'medium', 'big'], include_lowest=True)
         df['response_length'] = df['response_length'].cat.add_categories('zero')
         df['response_length'] = df['response_length'].fillna('zero')
         # df['response_length'].hist(bins=4)
