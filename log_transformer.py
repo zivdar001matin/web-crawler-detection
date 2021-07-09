@@ -44,7 +44,13 @@ class LogTransformer(TransformerMixin):
         print('binning_method')
         df = df.join(pd.get_dummies(df['method'], sparse=True, prefix='method'))
 
-        for weight, name in zip([3, 1, 6, 8, 8], ['method_Get', 'method_Head', 'method_Options', 'method_Post', 'method_Put']):
+        columns=['method_Get', 'method_Head', 'method_Options', 'method_Post', 'method_Put']
+        for col in columns:
+            if col not in df.columns:
+                df[col] = 0
+                df[col] = df[col].astype(pd.SparseDtype(np.uint8))
+
+        for weight, name in zip([3, 1, 6, 8, 8], columns):
             df[name] = df[name].sparse.to_dense()
             df[name] *= weight
             df[name] = df[name].astype(pd.SparseDtype(np.uint8))
@@ -55,7 +61,7 @@ class LogTransformer(TransformerMixin):
         print('binning_requested_file_type')
         df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['png','jpg', 'jpeg','ico', 'gif','svg', 'ic_launcher'], 'img'))
         df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['js','css', 'xml','php'], 'code'))
-        df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['html', 'json'], 'renderable'))
+        df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['html', 'json', 'txt'], 'renderable'))
         df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['apk'], 'app'))
         df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['mp4', 'mov', 'wmv', 'avi', 'flw', 'swf'], 'video'))
         df[['requested_file_type']] = df[['requested_file_type']].replace(dict.fromkeys(['woff2','woff','ttf','eot'], 'font'))
@@ -63,7 +69,14 @@ class LogTransformer(TransformerMixin):
 
         df = df.join(pd.get_dummies(df['requested_file_type'],sparse=True, prefix='requested_file_type'))
 
-        for weight, name in zip([3, 8, 1, 8, 8, 8, 8, 3], ['img', 'code', 'renderable', 'app', 'video', 'font', 'endpoint']):
+        columns = ['img', 'code', 'renderable', 'app', 'video', 'font', 'endpoint']
+        for col in columns:
+            col = 'requested_file_type_' + col
+            if col not in df.columns:
+                df[col] = 0
+                df[col] = df[col].astype(pd.SparseDtype(np.uint8))
+
+        for weight, name in zip([3, 8, 1, 8, 8, 8, 3], columns):
             name = 'requested_file_type_' + name
             df[name] = df[name].sparse.to_dense()
             df[name] *= weight
@@ -76,6 +89,11 @@ class LogTransformer(TransformerMixin):
         df['status_code'] = df['status_code'].apply(lambda x: int(x/100))
         df = df.join(pd.get_dummies(df['status_code'], sparse=True))
 
+        columns=[1, 2, 3, 4, 5]
+        for col in columns:
+            if col not in df.columns:
+                df[col] = 0
+                df[col] = df[col].astype(pd.SparseDtype(np.uint8))
         df = df.rename({1: 'is_1xx', 2: 'is_2xx', 3: 'is_3xx', 4: 'is_4xx', 5: 'is_5xx'}, axis=1)
 
         for weight, name in zip([5, 3, 1, 1, 5], ['1', '2', '3', '4', '5']):
