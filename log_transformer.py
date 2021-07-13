@@ -37,7 +37,7 @@ class LogTransformer(TransformerMixin):
                 .pipe(self.extracting_timestamp)
                 .pipe(self.drop_rest)
         )
-        print(X_)
+        # print(X_)
         return X_
     
     def binning_method(self, df):
@@ -106,7 +106,7 @@ class LogTransformer(TransformerMixin):
     
     def binning_response_length(self, df):
         print('binning_response_length')
-        df['response_length'] = df['response_length'].apply(lambda x: re.search(r'\d*', x)[0])
+        df['response_length'] = df['response_length'].apply(lambda x: re.search(r'\d*', str(x))[0])
         df.loc[df['response_length'] == '', 'response_length'] = '0'
         df['response_length'] = df['response_length'].values.astype(np.int32)
         df['response_length'] = pd.cut(df['response_length'], bins=self.bins, labels=['small', 'medium', 'big'], include_lowest=True)
