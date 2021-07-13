@@ -1,0 +1,5 @@
+conda_env: conda.yaml
+
+entry_points:
+    pca_train:
+        command: python pca.py
