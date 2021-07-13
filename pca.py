@@ -29,6 +29,12 @@ def main():
         pipe.fit_transform(X)
         print("Logged data and model in run: {}".format(run.info.run_id))
 
+        # # For loading model in the old way (load from pickle)
+        # mlflow.sklearn.log_model(pipe, 'model')
+
+        # # Save training data
+        # mlflow.log_artifact('datasets/unprocessed.csv')
+
     # show logged data
     for key, data in fetch_logged_data(run.info.run_id).items():
         print("\n---------- logged {} ----------".format(key))
