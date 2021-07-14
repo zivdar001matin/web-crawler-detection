@@ -3,3 +3,9 @@ conda_env: conda.yaml
 entry_points:
     pca_train:
         command: python pca.py
+    
+    autoencoder_train:
+        parameters:
+            epochs: {type: int, default: 10}
+            batch_size: {type: int, default: 512}
+        command: python train_predict_2.py --epochs={epochs} --batch_size={batch_size}
