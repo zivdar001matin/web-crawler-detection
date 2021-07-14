@@ -32,8 +32,8 @@ class LogTransformer(TransformerMixin):
                 .pipe(self.binning_status_code)
                 .pipe(self.binning_response_length)
                 .pipe(self.extracting_url_depth)
-                # .pipe(self.extracting_user_agent_parts)
-                .pipe(self.extracting_packet_time)
+                .pipe(self.extracting_user_agent_parts)
+                # .pipe(self.extracting_packet_time)
                 .pipe(self.extracting_timestamp)
                 .pipe(self.drop_rest)
         )
@@ -158,7 +158,6 @@ class LogTransformer(TransformerMixin):
                 return 'Generic'
         
         df = df.pipe(find_user_agent)
-        df = df.drop('user_agent', axis=1)
 
         df[['os_family']] = df[['os_family']].replace(dict.fromkeys(['Android', 'iOS', 'BlackBerry OS', 'Symbian OS', 'Symbian^3', 'KaiOS', 'Windows Phone', 'Tizen'], 'Phone'))
         df[['os_family']] = df[['os_family']].replace(dict.fromkeys(['Mac OS X', 'Windows', 'Ubuntu', 'Linux'], 'PC'))
@@ -166,10 +165,22 @@ class LogTransformer(TransformerMixin):
         df = df.join(pd.get_dummies(df['os_family'],sparse=True, drop_first=True, prefix='os_family'))
         df = df.drop('os_family', axis=1)
 
+        columns=['os_family_PC', 'os_family_Phone']
+        for col in columns:
+            if col not in df.columns:
+                df[col] = 0
+                df[col] = df[col].astype(pd.SparseDtype(np.uint8))
+
 
         df['device_brand'] = df['device_brand'].apply(lambda x: find_from_device_brand(x))
         df = df.join(pd.get_dummies(df['device_brand'],sparse=True, drop_first=True, prefix='device_brand'))
         df = df.drop('device_brand', axis=1)
+
+        columns=['device_brand_Spider']
+        for col in columns:
+            if col not in df.columns:
+                df[col] = 0
+                df[col] = df[col].astype(pd.SparseDtype(np.uint8))
 
         # did nothing about it
         df = df.drop('user_agent_family', axis=1)
@@ -199,6 +210,6 @@ class LogTransformer(TransformerMixin):
 
     def drop_rest(self, df):
         print('drop_rest')
-        df = df.drop(['ip', 'user_agent', 'response_time', 'method', 'requested_file_type', 'status_code', 'response_length', 'url', 'user_agent', 'timestamp'], axis=1)
+        df = df.drop(['ip', 'user_agent', 'response_time', 'method', 'requested_file_type', 'status_code', 'response_length', 'url', 'timestamp'], axis=1)
 
         return df
