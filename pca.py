@@ -8,6 +8,7 @@ import mlflow
 from fetch_data import fetch_logged_data
 from log_transformer import LogTransformer
 from pca_estimator import PCAEstimator
+from rule_based import RuleBasedEstimator
 
 def main():
     # enable autologging
@@ -22,7 +23,8 @@ def main():
     pipe = Pipeline(
         [
             ("transform", LogTransformer()),
-            ("pca", PCAEstimator())
+            ("pca", PCAEstimator()),
+            ("rule_based", RuleBasedEstimator())
         ]
         , verbose=True)
     with mlflow.start_run() as run:
