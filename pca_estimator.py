@@ -22,13 +22,15 @@ class PCAEstimator(BaseEstimator):
         loss = np.sum((X_ - X_reconstructed)**2, axis=1)
 
         # Consider 10% of data as anomaly
-        self.threshold = np.percentile(loss, 90)
+        self.threshold = np.percentile(loss, 98)
 
         return self
 
     
     def transform(self, X, y=None):
-        return self
+        X_ = X.copy()
+        X_['pca_predict'] = self.predict(X_)
+        return X_
 
     def predict(self, X):
         X_ = X.values
