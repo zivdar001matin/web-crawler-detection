@@ -38,6 +38,9 @@ $ curl	--location --request POST '127.0.0.1:8000/invocations' \
 	--header 'Content-Type: text/csv' \
 	--data-binary './datasets/test.csv'
 ```
+
+![](https://github.com/zivdar001matin/web-crawler-detection/blob/main/icons/MLflow_API_request.gif)
+
 ## Project Description
 Anomaly detection is one of the most popular machine learning techniques. In this project, we are asked to identify abnormal behaviors in a system, which relies on the analysis of logs collected in real-time from the log aggregation systems of an enterprise.
 This is server log format
