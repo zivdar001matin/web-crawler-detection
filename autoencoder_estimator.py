@@ -1,3 +1,4 @@
+import mlflow
 import numpy as np
 from sklearn.base import BaseEstimator
 import tensorflow as tf
@@ -30,10 +31,39 @@ class AutoEncoderEstimator(BaseEstimator):
         self.batch_size = batch_size
 
     def fit(self, X, y=None):
+        X_ = X.values
+
+        train_data, test_data = train_test_split(
+            X_, test_size=0.2, shuffle=False
+        )
+        train_data = tf.cast(train_data, tf.float32)
+        test_data = tf.cast(test_data, tf.float32)
+
+        self.autoencoder = AutoEncoder()
+        self.autoencoder.compile(optimizer='adam', loss='mae')
+
+        self.autoencoder.fit(train_data, train_data, 
+          epochs=self.epochs, 
+          batch_size=self.batch_size,
+          validation_data=(test_data, test_data),
+          shuffle=True)
+
+        reconstructions = self.autoencoder.predict(X_)
+        train_loss = tf.keras.losses.mae(reconstructions, X_)
+        self.threshold = np.mean(train_loss) + np.std(train_loss)
+
         return self
     
     def transform(self, X, y=None):
         return self
 
     def predict(self, X):
-        return np.zeros(X.shape[0])
+        X_ = X.values
+
+        print(X_.shape)
+        print(type(X_))
+
+        reconstructions = self.autoencoder(X_)
+        losses = tf.keras.eses.mae(reconstructions, X_)
+
+        return tf.math.less(self.threshold, losses)
