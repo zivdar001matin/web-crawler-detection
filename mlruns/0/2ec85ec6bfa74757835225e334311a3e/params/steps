@@ -1,0 +1,1 @@
+[('transform', <log_transformer.LogTransformer object at 0x7f233a018760>), ('pca', PCAEstimator()), ('rule_based', RuleBasedEstimator())]

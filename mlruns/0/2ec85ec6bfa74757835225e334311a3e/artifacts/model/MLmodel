@@ -1,0 +1,20 @@
+artifact_path: model
+flavors:
+  python_function:
+    env: conda.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    python_version: 3.8.10
+  sklearn:
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 0.24.2
+run_id: 2ec85ec6bfa74757835225e334311a3e
+signature:
+  inputs: '[{"name": "ip", "type": "string"}, {"name": "time", "type": "string"},
+    {"name": "method", "type": "string"}, {"name": "url", "type": "string"}, {"name":
+    "requested_file_type", "type": "string"}, {"name": "status_code", "type": "long"},
+    {"name": "response_length", "type": "long"}, {"name": "user_agent", "type":
+    "string"}, {"name": "response_time", "type": "long"}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "bool", "shape": [-1]}}]'
+utc_time_created: '2021-07-14 23:13:57.154306'
