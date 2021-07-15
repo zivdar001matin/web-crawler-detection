@@ -99,7 +99,7 @@ API was implemented using MLflow. MLflow is an open source platform to manage th
 You can see API example in [this video](https://drive.google.com/file/d/1IzT8EME9zJyGkGMINLrx-F6jT8BfwVuM/view?usp=sharing). Sent requests using Postmman.
 ## Contact
 Our Team:
-- Matin Zivdar - zivdar1matin@gmail.com
 - Ahmad Etezadi - etezadi63@gmail.com
+- Matin Zivdar - zivdar1matin@gmail.com
 
 Special thanks to our supportive and knowledgeable mentor  Tadeh Alexani - [@tadeha](https://github.com/tadeha) and Rahnema College Team.
